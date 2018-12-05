@@ -8,31 +8,60 @@
 # - 12cR2-dbca.rsp (DBCA create database response file)
 
 # variables for set up
+########################################
+ROOT_PASSWORD='welcome1'
 ORACLE_PASSWORD='welcome1'
 ORACLE_INSTALLMEDIADIR='/home/oracle'
 ORACLE_INSTALLMEDIAFILE='linuxx64_12201_database.zip'
 DB_OUI_RSPFILE='oui_db122.rsp'
-DBCA_RSPFILE='dbca_createDB_db122_single.rsp'
+
+# change this variable to create DB using another response file
+DBCA_RSPFILE='dbca_createDB_db122_single_nonCDB.rsp'
 
 # set up environment variables
+########################################
 ORACLE_BASE=/u01/app/oracle
 ORACLE_HOME=${ORACLE_BASE}/product/12.2.0.1/dbhome_1
 ORACLE_CHARACTERSET=AL32UTF8
 ORACLE_SID=orcl
-ORACLE_PDB=pdb1
 
 # check that files are present under /vagrant
+########################################
 if [[ $(ls /vagrant/${ORACLE_INSTALLMEDIAFILE} /vagrant/${DB_OUI_RSPFILE} /vagrant/${DBCA_RSPFILE} | wc -l) -ne 3 ]]; then
   echo "Required files not found under /vagrant"
   exit 1
 fi
 
 # install packages
+########################################
+
+# install packages
 yum -y update
 yum -y install oracle-database-server-12cR2-preinstall
 
+# set up linux
+########################################
+
 # set up locale
 localectl set-keymap jp106   # Japanese jp106 keymap
+
+# alter sshd_config
+su - root -c 'sed -i "s/^#PermitRootLogin yes$/PermitRootLogin yes/" /etc/ssh/sshd_config'
+su - root -c 'sed -i "s/^PasswordAuthentication no$/PasswordAuthentication yes/" /etc/ssh/sshd_config'
+su - root -c 'systemctl restart sshd.service'
+
+# alter pam settings
+su - root -c 'sed -i "s/^#auth.*required.*pam_wheel.so use_uid$/auth            required        pam_wheel.so use_uid/" /etc/pam.d/su'
+su - root -c 'sed -i "s/^#account.*required.*pam_succeed_if.so user notin root:vagrant$/#account         required        pam_succeed_if.so user notin root:vagrant/" /etc/pam.d/su'
+
+# set up user permissions and passwords
+su - root -c "echo root:${ROOT_PASSWORD} | chpasswd"
+su - root -c 'usermod -a -G wheel oracle'
+echo oracle:${ORACLE_PASSWORD} | chpasswd
+
+
+# install Oracle Database
+########################################
 
 # copy files from /vagrant to proper locations
 su - oracle -c "unzip /vagrant/${ORACLE_INSTALLMEDIAFILE} -d ${ORACLE_INSTALLMEDIADIR}"
@@ -42,7 +71,6 @@ chown oracle:oinstall ${ORACLE_INSTALLMEDIADIR}/${DB_OUI_RSPFILE}
 chown oracle:oinstall ${ORACLE_INSTALLMEDIADIR}/${DBCA_RSPFILE}
 chmod 644 ${ORACLE_INSTALLMEDIADIR}/${DB_OUI_RSPFILE}
 chmod 644 ${ORACLE_INSTALLMEDIADIR}/${DBCA_RSPFILE}
-
 
 # create directories
 mkdir -p ${ORACLE_HOME}
@@ -68,9 +96,6 @@ chown oracle:oinstall /home/oracle/.oraenv_orcl
 cat << EOF >> /home/oracle/.bash_profile
 source /home/oracle/.oraenv_orcl
 EOF
-
-# set oracle user password
-echo oracle:${ORACLE_PASSWORD} | chpasswd
 
 # install database
 su - oracle -c "unzip ${ORACLE_INSTALLMEDIADIR}/${ORACLE_INSTALLMEDIAFILE} -d ${ORACLE_INSTALLMEDIADIR}"
