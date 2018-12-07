@@ -100,8 +100,8 @@ EOF
 # install database
 su - oracle -c "unzip ${ORACLE_INSTALLMEDIADIR}/${ORACLE_INSTALLMEDIAFILE} -d ${ORACLE_INSTALLMEDIADIR}"
 su - oracle -c "${ORACLE_INSTALLMEDIADIR}/database/runInstaller -silent -showProgress -ignorePrereq -waitforcompletion -responseFile ${ORACLE_INSTALLMEDIADIR}/${DB_OUI_RSPFILE}"
-${ORACLE_BASE}/../oraInventory/orainstRoot.sh
-${ORACLE_HOME}/root.sh
+su - root -c "${ORACLE_BASE}/../oraInventory/orainstRoot.sh"
+su - root -c "${ORACLE_HOME}/root.sh"
 
 # create listener
 su - oracle -c "${ORACLE_HOME}/bin/netca -silent -responseFile ${ORACLE_HOME}/assistants/netca/netca.rsp"
