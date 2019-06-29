@@ -9,9 +9,9 @@
 
 # variables for set up
 ########################################
-ROOT_PASSWORD='welcome1'
-ORACLE_PASSWORD='welcome1'
-SYS_PASSWORD='welcome1'
+ROOT_PASSWORD='changeme'
+ORACLE_PASSWORD='changeme'
+SYS_PASSWORD='changeme'
 ORACLE_INSTALLMEDIADIR='/home/oracle'
 ORACLE_INSTALLMEDIAFILE='linuxx64_12201_database.zip'
 DB_OUI_RSPFILE='oui_db122.rsp'
