@@ -1,0 +1,109 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "https://yum.oracle.com/boxes/oraclelinux/ol76/ol76.box"
+
+  # define node1
+  ######################################################################
+  config.vm.define :node1 do |node1|
+
+    # hostname
+    node1.vm.hostname = "node1"
+
+    # host-only adapter (eth1)
+    node1.vm.network "private_network", ip: "192.168.56.101"
+
+    # VirtualBox internal network for RAC/ASM private LAN (eth2)
+    node1.vm.network "private_network", ip: "192.168.100.101",
+      virtualbox__intnet: true
+
+    # VirtualBox VM settings
+    node1.vm.provider "virtualbox" do |vb|
+      vb.memory = "6144"                             # memory (6GB)
+      vb.customize ["modifyvm", :id, "--cpus", "1"]  # CPU
+      # create disk for ASM
+      vb.customize [
+        'createmedium', 'disk',
+        '--filename', "data1.vdi",
+        '--format', 'VDI',
+        '--size', 40 * 1024,        # 40 GB
+        '--variant', 'Fixed']       # thick provision
+      # modify disk to shared
+      vb.customize [
+        'modifymedium', 'disk', 'data1.vdi',
+        '--type', 'shareable']
+      # attach disk for ASM
+      vb.customize [
+        'storageattach', :id,
+        '--storagectl', 'SATA Controller',
+        '--port', 2,
+        '--device', 0,
+        '--type', 'hdd',
+        '--mtype', 'shareable',
+        '--medium', "data1.vdi"]
+      # increase port count of SATA Controller
+      vb.customize [
+        'storagectl', :id,
+        '--name', 'SATA Controller',
+        '--portcount', 3]
+    end
+
+    # execute OS setup script (node1)
+    node1.vm.provision :shell,
+      :path => "setup_OS.sh",
+      :args => "1"
+
+  end # define node1
+
+
+  # define node2
+  ######################################################################
+  config.vm.define :node2 do |node2|
+
+    # hostname
+    node2.vm.hostname = "node2"
+
+    # host-only adapter (eth1)
+    node2.vm.network "private_network", ip: "192.168.56.102"
+
+    # VirtualBox internal network for RAC/ASM private LAN (eth2)
+    node2.vm.network "private_network", ip: "192.168.100.102",
+      virtualbox__intnet: true
+
+    # VirtualBox VM settings
+    node2.vm.provider "virtualbox" do |vb|
+      vb.memory = "6144"                             # memory (6GB)
+      vb.customize ["modifyvm", :id, "--cpus", "1"]  # CPU
+      vb.customize [
+        'storageattach', :id,
+        '--storagectl', 'SATA Controller',
+        '--port', 2,
+        '--device', 0,
+        '--type', 'hdd',
+        '--mtype', 'shareable',
+        '--medium', "data1.vdi"]
+      # increase port count
+      vb.customize [
+        'storagectl', :id,
+        '--name', 'SATA Controller',
+        '--portcount', 3]
+    end
+
+    # execute OS setup script (node2)
+    node2.vm.provision :shell,
+      :path => "setup_OS.sh",
+      :args => "2"
+
+    # execute GI setup script at node1
+    node2.vm.provision :shell,
+      inline: "sudo -u grid ssh grid@node1 /home/grid/setup_GI.sh '1'"
+
+    # execute DB setup script at node2
+    node2.vm.provision :shell,
+      inline: "sudo -u oracle ssh oracle@node1 /home/oracle/setup_DB.sh '1'"
+    
+  end # define node2
+
+end
