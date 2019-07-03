@@ -31,7 +31,7 @@ Oracle Database 12.2.
 1. Create a directory for this environment's vagrant files
 2. cd into the directory and do `vagrant init`
 3. Download contents of this repository into the directory
-4. Download linuxx64_12201_grid_home.zip and linuxx64_12201_database.zip from [here][https://www.oracle.com/technetwork/database/enterprise-edition/downloads/oracle12c-linux-12201-3608234.html] and put them in the current directory
+4. Download linuxx64_12201_grid_home.zip and linuxx64_12201_database.zip from [here](https://www.oracle.com/technetwork/database/enterprise-edition/downloads/oracle12c-linux-12201-3608234.html) and put them in the current directory
 5. `vagrant up`
 
 ## To destroy the VM:
