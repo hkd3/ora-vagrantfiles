@@ -91,6 +91,7 @@ function reduce_grid_overhead () {
   # disable diagsnap
   sudo -u grid ${GRID_HOME}/bin/oclumon -disable diagsnap
 }
+#TODO
 #if [[ ${NODENUM} == '1' ]]; then
 #  reduce_grid_overhead
 #fi
