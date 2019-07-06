@@ -2,18 +2,18 @@
 ##                                                                          ##
 ##                            DBCA response file                            ##
 ##                            ------------------                            ##
-## Copyright(c) Oracle Corporation 1998,2017. All rights reserved.          ##
+## Copyright(c) Oracle Corporation 1998,2017. All rights reserved.         ##
 ##                                                                          ##
 ## Specify values for the variables listed below to customize               ##
-## your installation.                                                       ##
-##                                                                          ##
-## Each variable is associated with a comment. The comment                  ##
-## can help to populate the variables with the appropriate                  ##
-## values.                                                                  ##
-##                                                                          ##
-## IMPORTANT NOTE: This file contains plain text passwords and              ##
-## should be secured to have read permission only by oracle user            ##
-## or db administrator who owns this installation.                          ##
+## your installation.                                         		    ##
+##                                                            		    ##
+## Each variable is associated with a comment. The comment    		    ##
+## can help to populate the variables with the appropriate   		    ##
+## values.                                                  		    ##
+##                                                               	    ##
+## IMPORTANT NOTE: This file contains plain text passwords and   	    ##
+## should be secured to have read permission only by oracle user 	    ##
+## or db administrator who owns this installation.               	    ##
 ##############################################################################
 #-------------------------------------------------------------------------------
 # Do not change the following system generated value. 
@@ -49,7 +49,7 @@ sid=orcl
 # Default value : SI
 # Mandatory     : No
 #-----------------------------------------------------------------------------
-databaseConfigType=SI
+databaseConfigType=RAC
 
 #-----------------------------------------------------------------------------
 # Name          : RACOneNodeServiceName
@@ -159,7 +159,7 @@ pqCardinality=
 # Default value : false
 # Mandatory     : No
 #-----------------------------------------------------------------------------
-createAsContainerDatabase=false
+createAsContainerDatabase=true
 
 #-----------------------------------------------------------------------------
 # Name          : numberOfPDBs
@@ -169,7 +169,7 @@ createAsContainerDatabase=false
 # Default value : 0
 # Mandatory     : No
 #-----------------------------------------------------------------------------
-numberOfPDBs=
+numberOfPDBs=0
 
 #-----------------------------------------------------------------------------
 # Name          : pdbName 
@@ -189,7 +189,7 @@ pdbName=
 # Default value : TRUE
 # Mandatory     : No
 #-----------------------------------------------------------------------------
-useLocalUndoForPDBs=
+useLocalUndoForPDBs=true
 
 #-----------------------------------------------------------------------------
 # Name          : pdbAdminPassword
@@ -210,7 +210,7 @@ pdbAdminPassword=
 # Default value : None
 # Mandatory     : No (Yes for RAC database-centric database )
 #-----------------------------------------------------------------------------
-nodelist=
+nodelist=node1,node2
 
 #-----------------------------------------------------------------------------
 # Name          : templateName
@@ -220,7 +220,7 @@ nodelist=
 # Default value : None
 # Mandatory     : Yes
 #-----------------------------------------------------------------------------
-templateName=/u01/app/oracle/product/12.2.0.1/dbhome_1/assistants/dbca/templates/New_Database.dbt
+templateName=/u01/app/oracle/product/12.2.0.1/dbhome_1/assistants/dbca/templates/General_Purpose.dbc
 
 #-----------------------------------------------------------------------------
 # Name          : sysPassword
@@ -230,7 +230,7 @@ templateName=/u01/app/oracle/product/12.2.0.1/dbhome_1/assistants/dbca/templates
 # Default value : None
 # Mandatory     : Yes
 #-----------------------------------------------------------------------------
-sysPassword=welcome1
+sysPassword=changeme
 
 #-----------------------------------------------------------------------------
 # Name          : systemPassword
@@ -240,7 +240,7 @@ sysPassword=welcome1
 # Default value : None
 # Mandatory     : Yes
 #-----------------------------------------------------------------------------
-systemPassword=welcome1
+systemPassword=changeme
 
 #-----------------------------------------------------------------------------
 # Name          : serviceUserPassword
@@ -259,7 +259,7 @@ serviceUserPassword=
 # Default value : NONE
 # Mandatory     : No
 #-----------------------------------------------------------------------------
-emConfiguration=NONE
+emConfiguration=
 
 #-----------------------------------------------------------------------------
 # Name          : emExpressPort
@@ -292,7 +292,7 @@ runCVUChecks=false
 # Mandatory     : Yes, if emConfiguration is specified or
 #                 the value of runCVUChecks is TRUE
 #-----------------------------------------------------------------------------
-dbsnmpPassword=welcome1
+dbsnmpPassword=changeme
 
 #-----------------------------------------------------------------------------
 # Name          : omsHost
@@ -398,7 +398,7 @@ olsConfiguration=false
 # Default value : None
 # Mandatory     : No
 #-----------------------------------------------------------------------------
-datafileJarLocation=
+datafileJarLocation={ORACLE_HOME}/assistants/dbca/templates/
 
 #-----------------------------------------------------------------------------
 # Name          : datafileDestination 
@@ -408,7 +408,7 @@ datafileJarLocation=
 # Default value : $ORACLE_BASE/oradata
 # Mandatory     : No
 #-----------------------------------------------------------------------------
-datafileDestination=
+datafileDestination=+DATA/{DB_UNIQUE_NAME}/
 
 #-----------------------------------------------------------------------------
 # Name          : recoveryAreaDestination
@@ -418,7 +418,7 @@ datafileDestination=
 # Default value : $ORACLE_BASE/flash_recovery_area
 # Mandatory     : No
 #-----------------------------------------------------------------------------
-recoveryAreaDestination=
+recoveryAreaDestination=+DATA
 
 #-----------------------------------------------------------------------------
 # Name          : storageType
@@ -428,7 +428,7 @@ recoveryAreaDestination=
 # Default value : FS
 # Mandatory     : No
 #-----------------------------------------------------------------------------
-storageType=FS
+storageType=ASM
 
 #-----------------------------------------------------------------------------
 # Name          : diskGroupName
@@ -437,7 +437,7 @@ storageType=FS
 # Default value : DATA
 # Mandatory     : No
 #-----------------------------------------------------------------------------
-diskGroupName=
+diskGroupName=+DATA/{DB_UNIQUE_NAME}/
 
 #-----------------------------------------------------------------------------
 # Name          : asmsnmpPassword
@@ -455,7 +455,7 @@ asmsnmpPassword=
 # Default value : RECOVERY
 # Mandatory     : No
 #-----------------------------------------------------------------------------
-recoveryGroupName=
+recoveryGroupName=+DATA
 
 #-----------------------------------------------------------------------------
 # Name          : characterSet
@@ -552,8 +552,7 @@ variables=DB_UNIQUE_NAME=orcl,ORACLE_BASE=/u01/app/oracle,PDB_NAME=,DB_NAME=orcl
 # Default value : None
 # Mandatory     : NO
 #-----------------------------------------------------------------------------
-initParams=processes=300,nls_language=AMERICAN,pga_aggregate_target=395MB,sga_target=1184MB,dispatchers=(PROTOCOL=TCP) (SERVICE=orclXDB),db_block_size=8192BYTES,diagnostic_dest={ORACLE_BASE},audit_file_dest={ORACLE_BASE}/admin/{DB_UNIQUE_NAME}/adump,nls_territory=AMERICA,compatible=12.2.0,db_name=orcl,audit_trail=xml,remote_login_passwordfile=exclusive,open_cursors=300
-#initParams=family:dw_helper.instance_mode=read-only,db_create_online_log_dest_1={ORACLE_BASE}/flash_recovery_area,processes=300,nls_language=AMERICAN,pga_aggregate_target=395MB,sga_target=1184MB,dispatchers=(PROTOCOL=TCP) (SERVICE=orclXDB),db_block_size=8192BYTES,diagnostic_dest={ORACLE_BASE},audit_file_dest={ORACLE_BASE}/admin/{DB_UNIQUE_NAME}/adump,nls_territory=AMERICA,local_listener=-oraagent-dummy-,compatible=12.2.0,db_name=orcl,audit_trail=xml,undo_tablespace=UNDOTBS,remote_login_passwordfile=exclusive,open_cursors=300,control_files={ORACLE_BASE}/oradata
+initParams=orcl1.undo_tablespace=UNDOTBS1,orcl2.undo_tablespace=UNDOTBS2,db_recovery_file_dest_size=12000MB,sga_target=512MB,orcl1.thread=1,orcl2.thread=2,diagnostic_dest={ORACLE_BASE},cluster_database=true,audit_file_dest={ORACLE_BASE}/admin/{DB_UNIQUE_NAME}/adump,db_create_file_dest=+DATA/{DB_UNIQUE_NAME}/,local_listener=-oraagent-dummy-,compatible=12.2.0,orcl1.instance_number=1,open_cursors=300,orcl2.instance_number=2,family:dw_helper.instance_mode=read-only,processes=300,nls_language=AMERICAN,pga_aggregate_target=256MB,dispatchers=(PROTOCOL=TCP) (SERVICE=orclXDB),db_recovery_file_dest=+DATA,db_block_size=8192BYTES,nls_territory=AMERICA,db_name=orcl,audit_trail=xml,remote_login_passwordfile=exclusive
 
 #-----------------------------------------------------------------------------
 # Name          : sampleSchema

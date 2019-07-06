@@ -4,10 +4,11 @@
 # The files below must be present under /vagrant
 # (the shared folder synced to the host machine Vagrant working dir)
 # - linuxx64_12201_database.zip
-# - linuxx64_12201_grid_home.zip
 # - oui_db122.rsp (Database OUI installer response file)
-# - oui_gi122.rsp (Grid InfrastructureOUI installer response file)
 # - dbca_createDB_db122_RAC_nonCDB.rsp (DBCA create database response file)
+
+# ARGS:
+#   $1: node number
 
 NODENUM=${1}
 OTHERNUM='0'
@@ -32,17 +33,13 @@ ORACLE_SID="orcl${NODENUM}"
 # check that files are present under /vagrant
 ########################################
 if [[ $(ls /vagrant/${ORACLE_INSTALLMEDIAFILE} \
-           /vagrant/${GRID_INSTALLMEDIAFILE} \
            /vagrant/${DB_OUI_RSPFILE} \
-           /vagrant/${GI_OUI_RSPFILE} \
            /vagrant/${DBCA_RSPFILE} \
-           | wc -l) -ne 5 ]]; then
+           | wc -l) -ne 3 ]]; then
   echo "Not all of required files not found under /vagrant"
   echo "Please have all of the files below under /vagrant :"
   echo "- ${ORACLE_INSTALLMEDIAFILE}"
-  echo "- ${GRID_INSTALLMEDIAFILE}"
   echo "- ${DB_OUI_RSPFILE}"
-  echo "- ${GI_OUI_RSPFILE}"
   echo "- ${DBCA_RSPFILE}"
   exit 1
 fi
@@ -53,24 +50,19 @@ fi
 function install_oracle_database () {
   echo '[setup.sh] installing Oracle Database...'
 
-  # copy files from /vagrant to proper locations
+  # unzip Oracle Database install files
   sudo -u oracle unzip /vagrant/${ORACLE_INSTALLMEDIAFILE} -d ${ORACLE_INSTALLMEDIADIR}
-  sudo -u vagrant cp -p /vagrant/${DB_OUI_RSPFILE} ${ORACLE_INSTALLMEDIADIR}
-  sudo -u vagrant cp -p /vagrant/${DBCA_RSPFILE} ${ORACLE_INSTALLMEDIADIR}
-  sudo -u vagrant chown oracle:oinstall ${ORACLE_INSTALLMEDIADIR}/${DB_OUI_RSPFILE}
-  sudo -u vagrant chown oracle:oinstall ${ORACLE_INSTALLMEDIADIR}/${DBCA_RSPFILE}
-  sudo -u vagrant chmod 644 ${ORACLE_INSTALLMEDIADIR}/${DB_OUI_RSPFILE}
-  sudo -u vagrant chmod 644 ${ORACLE_INSTALLMEDIADIR}/${DBCA_RSPFILE}
 
   # install database
-  sudo -u oracle ${ORACLE_INSTALLMEDIADIR}/database/runInstaller -silent -showProgress -ignorePrereq -waitforcompletion -responseFile ${ORACLE_INSTALLMEDIADIR}/${DB_OUI_RSPFILE}
-  sudo -u root ${ORACLE_BASE}/../oraInventory/orainstRoot.sh
+  sudo -u oracle ${ORACLE_INSTALLMEDIADIR}/database/runInstaller -silent -showProgress -ignorePrereqFailure -waitforcompletion -responseFile /vagrant/${DB_OUI_RSPFILE}
+
+  # root.sh
   sudo -u root ${ORACLE_HOME}/root.sh
+  sudo -u oracle ssh oracle@${OTHERHOSTNAME} sudo ${ORACLE_HOME}/root.sh
 }
-#TODO
-#if [[ ${NODENUM} == '1' ]]; then
-#  install_oracle_database
-#fi
+if [[ ${NODENUM} == '1' ]]; then
+  install_oracle_database
+fi
 
 # create DB
 ########################################
@@ -78,10 +70,9 @@ function create_database () {
   echo '[setup.sh] creating database...'
 
   # create database
-  sudo -u oracle ${ORACLE_HOME}/bin/dbca -silent -createDatabase -responseFile ${ORACLE_INSTALLMEDIADIR}/${DBCA_RSPFILE}
+  sudo -u oracle ${ORACLE_HOME}/bin/dbca -silent -createDatabase -ignorePreReqs -responseFile /vagrant/${DBCA_RSPFILE}
 }
-#TODO
-#if [[ ${NODENUM} == '1' ]]; then
-#create_database
-#fi
+if [[ ${NODENUM} == '1' ]]; then
+  create_database
+fi
 

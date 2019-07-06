@@ -3,11 +3,11 @@
 # PREREQS:
 # The files below must be present under /vagrant
 # (the shared folder synced to the host machine Vagrant working dir)
-# - linuxx64_12201_database.zip
 # - linuxx64_12201_grid_home.zip
-# - oui_db122.rsp (Database OUI installer response file)
 # - oui_gi122.rsp (Grid InfrastructureOUI installer response file)
-# - dbca_createDB_db122_RAC_nonCDB.rsp (DBCA create database response file)
+
+# ARGS:
+#   $1: node number
 
 NODENUM=${1}
 OTHERNUM='0'
@@ -32,19 +32,13 @@ ORACLE_SID="orcl${NODENUM}"
 
 # check that files are present under /vagrant
 ########################################
-if [[ $(ls /vagrant/${ORACLE_INSTALLMEDIAFILE} \
-           /vagrant/${GRID_INSTALLMEDIAFILE} \
-           /vagrant/${DB_OUI_RSPFILE} \
+if [[ $(ls /vagrant/${GRID_INSTALLMEDIAFILE} \
            /vagrant/${GI_OUI_RSPFILE} \
-           /vagrant/${DBCA_RSPFILE} \
-           | wc -l) -ne 5 ]]; then
+           | wc -l) -ne 2 ]]; then
   echo "Not all of required files not found under /vagrant"
   echo "Please have all of the files below under /vagrant :"
-  echo "- ${ORACLE_INSTALLMEDIAFILE}"
   echo "- ${GRID_INSTALLMEDIAFILE}"
-  echo "- ${DB_OUI_RSPFILE}"
   echo "- ${GI_OUI_RSPFILE}"
-  echo "- ${DBCA_RSPFILE}"
   exit 1
 fi
 
@@ -89,10 +83,9 @@ function reduce_grid_overhead () {
   sudo -u grid ${GRID_HOME}/bin/srvctl disable qosmserver
 
   # disable diagsnap
-  sudo -u grid ${GRID_HOME}/bin/oclumon -disable diagsnap
+  sudo -u grid ${GRID_HOME}/bin/oclumon manage -disable diagsnap
 }
-#TODO
-#if [[ ${NODENUM} == '1' ]]; then
-#  reduce_grid_overhead
-#fi
+if [[ ${NODENUM} == '1' ]]; then
+  reduce_grid_overhead
+fi
 

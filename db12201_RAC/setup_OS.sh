@@ -53,16 +53,7 @@ echo '[setup_OS.sh] updating yum packages and installing 12cR2 preinstall rpm...
 
 # install packages
 yum -y update
-yum -y install oracle-database-server-12cR2-preinstall
-yum -y install perl ntp dnsmasq sshpass
-
-
-# locale
-########################################
-echo "[setup_OS.sh] setting up locale..."
-
-# set up locale
-localectl set-keymap jp106   # Japanese jp106 keymap
+yum -y install oracle-database-server-12cR2-preinstall perl ntp dnsmasq sshpass
 
 
 # resource limits /etc/security/limits.conf
@@ -137,6 +128,17 @@ su - root -c 'sed -i "s/^SELINUX=enforcing$/SELINUX=permissive/" /etc/selinux/co
 
 # tweak sudoers to allow wheel to sudo without password
 su - root -c "echo '%wheel        ALL=(ALL)       NOPASSWD: ALL' >> /etc/sudoers"
+
+
+# locale
+########################################
+echo "[setup_OS.sh] setting up locale..."
+
+# set up locale
+sudo localectl set-keymap jp106   # Japanese jp106 keymap
+
+# set up timezone
+sudo timedatectl set-timezone Asia/Tokyo
 
 
 # users and groups

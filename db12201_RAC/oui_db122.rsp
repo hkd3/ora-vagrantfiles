@@ -54,11 +54,15 @@ ORACLE_BASE=/u01/app/oracle
 # Specify the installation edition of the component.                     
 #                                                             
 # The value should contain only one of these choices.  
+      
 #   - EE     : Enterprise Edition 
+                               
 #   - SE2     : Standard Edition 2
-#-------------------------------------------------------------------------------
-oracle.install.db.InstallEdition=EE
 
+
+#-------------------------------------------------------------------------------
+
+oracle.install.db.InstallEdition=EE
 ###############################################################################
 #                                                                             #
 # PRIVILEGED OPERATING SYSTEM GROUPS                                          #
@@ -86,22 +90,22 @@ oracle.install.db.OSOPER_GROUP=oper
 #------------------------------------------------------------------------------
 # The OSBACKUPDBA_GROUP is the OS group which is to be granted SYSBACKUP privileges.
 #------------------------------------------------------------------------------
-oracle.install.db.OSBACKUPDBA_GROUP=backupdba
+oracle.install.db.OSBACKUPDBA_GROUP=dba
 
 #------------------------------------------------------------------------------
 # The OSDGDBA_GROUP is the OS group which is to be granted SYSDG privileges.
 #------------------------------------------------------------------------------
-oracle.install.db.OSDGDBA_GROUP=dgdba
+oracle.install.db.OSDGDBA_GROUP=dba
 
 #------------------------------------------------------------------------------
 # The OSKMDBA_GROUP is the OS group which is to be granted SYSKM privileges.
 #------------------------------------------------------------------------------
-oracle.install.db.OSKMDBA_GROUP=kmdba
+oracle.install.db.OSKMDBA_GROUP=dba
 
 #------------------------------------------------------------------------------
 # The OSRACDBA_GROUP is the OS group which is to be granted SYSRAC privileges.
 #------------------------------------------------------------------------------
-oracle.install.db.OSRACDBA_GROUP=racdba
+oracle.install.db.OSRACDBA_GROUP=dba
 
 ###############################################################################
 #                                                                             #
@@ -126,7 +130,7 @@ oracle.install.db.rac.configurationType=
 # 
 # Example : oracle.install.db.CLUSTER_NODES=node1,node2
 #------------------------------------------------------------------------------
-oracle.install.db.CLUSTER_NODES=
+oracle.install.db.CLUSTER_NODES=node1,node2
 
 #------------------------------------------------------------------------------
 # This variable is used to enable or disable RAC One Node install.
@@ -136,7 +140,7 @@ oracle.install.db.CLUSTER_NODES=
 #
 # If left blank, it will be assumed to be false.
 #------------------------------------------------------------------------------
-oracle.install.db.isRACOneInstall=
+oracle.install.db.isRACOneInstall=false
 
 #------------------------------------------------------------------------------
 # Value is required only if oracle.install.db.isRACOneInstall is true.
@@ -159,7 +163,7 @@ oracle.install.db.rac.serverpoolName=
 # Specify a number as cardinality for the new Server pool that will be configured
 # Example : oracle.install.db.rac.serverpoolCardinality=2
 #------------------------------------------------------------------------------
-oracle.install.db.rac.serverpoolCardinality=
+oracle.install.db.rac.serverpoolCardinality=0
 
 ###############################################################################
 #                                                                             #
@@ -175,7 +179,7 @@ oracle.install.db.rac.serverpoolCardinality=
 # GENERAL_PURPOSE: A starter database designed for general purpose use or transaction-heavy applications.
 # DATA_WAREHOUSE : A starter database optimized for data warehousing applications.
 #-------------------------------------------------------------------------------
-oracle.install.db.config.starterdb.type=
+oracle.install.db.config.starterdb.type=GENERAL_PURPOSE
 
 #-------------------------------------------------------------------------------
 # Specify the Starter Database Global Database Name. 
@@ -192,7 +196,7 @@ oracle.install.db.config.starterdb.SID=
 # The value can be either "true" or "false". If left blank it will be assumed
 # to be "false".
 #-------------------------------------------------------------------------------
-oracle.install.db.ConfigureAsContainerDB=
+oracle.install.db.ConfigureAsContainerDB=false
 
 #-------------------------------------------------------------------------------
 # Specify the  Pluggable Database name for the pluggable database in Container Database.
@@ -219,7 +223,7 @@ oracle.install.db.config.starterdb.characterSet=
 # If Automatic Memory Management is not desired, and memory allocation
 # is to be done manually, then set it to false.
 #------------------------------------------------------------------------------
-oracle.install.db.config.starterdb.memoryOption=
+oracle.install.db.config.starterdb.memoryOption=false
 
 #-------------------------------------------------------------------------------
 # Specify the total memory allocation for the database. Value(in MB) should be
@@ -235,7 +239,7 @@ oracle.install.db.config.starterdb.memoryLimit=
 # The value can be either "true" or "false". If left blank it will be assumed
 # to be "false".
 #-------------------------------------------------------------------------------
-oracle.install.db.config.starterdb.installExampleSchemas=
+oracle.install.db.config.starterdb.installExampleSchemas=false
 
 ###############################################################################
 #                                                                             #
@@ -283,7 +287,7 @@ oracle.install.db.config.starterdb.password.PDBADMIN=
 # 1. CLOUD_CONTROL - If you want to manage your database with Enterprise Manager Cloud Control along with Database Express.
 # 2. DEFAULT   -If you want to manage your database using the default Database Express option.
 #-------------------------------------------------------------------------------
-oracle.install.db.config.starterdb.managementOption=
+oracle.install.db.config.starterdb.managementOption=DEFAULT
 
 #-------------------------------------------------------------------------------
 # Specify the OMS host to connect to Cloud Control.
@@ -295,7 +299,7 @@ oracle.install.db.config.starterdb.omsHost=
 # Specify the OMS port to connect to Cloud Control.
 # Applicable only when oracle.install.db.config.starterdb.managementOption=CLOUD_CONTROL
 #-------------------------------------------------------------------------------
-oracle.install.db.config.starterdb.omsPort=
+oracle.install.db.config.starterdb.omsPort=0
 
 #-------------------------------------------------------------------------------
 # Specify the EM Admin user name to use to connect to Cloud Control.
@@ -321,7 +325,7 @@ oracle.install.db.config.starterdb.emAdminPassword=
 # This variable is to be set to false if database recovery is not required. Else 
 # this can be set to true.
 #-------------------------------------------------------------------------------
-oracle.install.db.config.starterdb.enableRecovery=
+oracle.install.db.config.starterdb.enableRecovery=false
 
 #-------------------------------------------------------------------------------
 # Specify the type of storage to use for the database.
@@ -381,7 +385,7 @@ MYORACLESUPPORT_PASSWORD=
 #
 # Example    : SECURITY_UPDATES_VIA_MYORACLESUPPORT=true
 #------------------------------------------------------------------------------
-SECURITY_UPDATES_VIA_MYORACLESUPPORT=
+SECURITY_UPDATES_VIA_MYORACLESUPPORT=false
 
 #------------------------------------------------------------------------------
 # Specify whether user doesn't want to configure Security Updates.
@@ -393,7 +397,7 @@ SECURITY_UPDATES_VIA_MYORACLESUPPORT=
 #
 # Example    : DECLINE_SECURITY_UPDATES=false
 #------------------------------------------------------------------------------
-DECLINE_SECURITY_UPDATES=
+DECLINE_SECURITY_UPDATES=true
 
 #------------------------------------------------------------------------------
 # Specify the Proxy server name. Length should be greater than zero.

@@ -15,7 +15,7 @@ DB_OUI_RSPFILE='oui_db122.rsp'
 #HOSTNAME="node${NODENUM}"
 
 # change this variable to create DB using another response file
-DBCA_RSPFILE='dbca_createDB_db122_RAC_nonCDB.rsp'
+DBCA_RSPFILE='dbca_createDB_db122_RAC.rsp'
 
 # set up environment variables for Oracle Grid Infrastructure
 ########################################
